@@ -1,4 +1,4 @@
-# 🚗 AutoVault — Car Dealership Inventory System
+# Car Dealership Inventory System
 
 A full-stack Car Dealership Inventory System built with **Java Spring Boot** (backend) and **React + Vite** (frontend), backed by **PostgreSQL**.
 
