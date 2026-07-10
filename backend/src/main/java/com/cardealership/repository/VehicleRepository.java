@@ -17,6 +17,10 @@ import java.math.BigDecimal;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
+    Page<Vehicle> findByMakeContainingIgnoreCase(String make, Pageable pageable);
+
+    Page<Vehicle> findByCategoryIgnoreCase(String category, Pageable pageable);
+
     /**
      * Searches vehicles using multiple optional filters with pagination.
      * Any parameter can be {@code null} to skip that filter.
