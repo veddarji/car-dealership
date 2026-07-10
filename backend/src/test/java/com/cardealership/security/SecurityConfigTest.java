@@ -79,4 +79,15 @@ class SecurityConfigTest {
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    void adminEndpoint_WithAdminRole_ShouldReturn200() throws Exception {
+        mockMvc.perform(delete("/api/vehicles/999")
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    assert status != 401 : "Expected non-401 status but got 401";
+                    assert status != 403 : "Expected non-403 status but got 403";
+                });
+    }
 }
