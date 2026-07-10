@@ -58,7 +58,7 @@ jobs:
       - name: Test Summary
         run: |
           echo "## Backend Test Results" >> $GITHUB_STEP_SUMMARY
-          grep -E "Tests run:|BUILD" <(mvn -B test -q 2>&1 || true) >> $GITHUB_STEP_SUMMARY
+          grep -E "Tests run:|BUILD" <(mvn -B test -q 2>&1 || true) >> $GITHUB_STEP_SUMMARY || true
 
   frontend-lint:
     name: Frontend Lint
