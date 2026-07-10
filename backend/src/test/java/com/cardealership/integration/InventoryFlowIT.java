@@ -28,12 +28,12 @@ class InventoryFlowIT {
 
     @BeforeEach
     void setUp() {
-        String ts = String.valueOf(System.currentTimeMillis());
-        ResponseEntity<AuthResponse> adminResp = restTemplate.postForEntity("/api/auth/register",
-                Map.of("username", "admin-" + ts, "email", "admin-" + ts + "@test.com", "password", "password123"),
+        ResponseEntity<AuthResponse> adminResp = restTemplate.postForEntity("/api/auth/login",
+                Map.of("username", "admin", "password", "admin123"),
                 AuthResponse.class);
         adminToken = adminResp.getBody().token();
 
+        String ts = String.valueOf(System.currentTimeMillis());
         ResponseEntity<AuthResponse> userResp = restTemplate.postForEntity("/api/auth/register",
                 Map.of("username", "user-" + ts, "email", "user-" + ts + "@test.com", "password", "password123"),
                 AuthResponse.class);
