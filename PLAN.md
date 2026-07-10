@@ -1,4 +1,4 @@
-# AutoVault — Car Dealership Inventory System
+# Car Dealership Inventory System
 
 ## Complete Implementation Plan
 
@@ -13,7 +13,7 @@ Build a full-stack Car Dealership Inventory System for the **Incubyte TDD kata**
 ## GitHub Repository Setup
 
 - **Owner:** `veddarji`
-- **Repo name:** `autovault`
+- **Repo name:** `car-dealership`
 - **Visibility:** Public
 - **Issues:** Enabled — create issues for each feature area
 - **Projects:** Enabled — simple kanban board (To Do → In Progress → Done)
@@ -1010,7 +1010,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
             .info(new Info()
-                .title("AutoVault API")
+                .title("Car Dealership API")
                 .version("1.0.0")
                 .description("Car Dealership Inventory System API")
                 .contact(new Contact()
@@ -1238,7 +1238,7 @@ src/
 - CSS transition for appearance
 
 **`Navbar.jsx`**
-- Logo "AutoVault" left
+- Logo "Car Dealership" left
 - Links: Dashboard, Admin (if admin), username + role badge, Logout
 - Mobile hamburger menu
 
@@ -1551,7 +1551,7 @@ Closes #12
 ### README.md — Complete Sections
 
 1. **Title + Badges** — Build passing, coverage, Java 21, Spring Boot, React
-2. **Project Description** — What is AutoVault?
+2. **Project Description** — What is this project?
 3. **Architecture Diagram** — ASCII/mermaid diagram
 4. **ER Diagram** — User + Vehicle tables
 5. **Authentication Flow** — Text description + sequence diagram
