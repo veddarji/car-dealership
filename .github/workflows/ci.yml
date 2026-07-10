@@ -7,7 +7,23 @@ on:
     branches: [main]
 
 jobs:
-  backend:
+  backend-lint:
+    name: Backend Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Compile
+        run: mvn -B compile -q
+        working-directory: backend
+
+  backend-test:
+    name: Backend Tests + Coverage
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -23,45 +39,103 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-
-      - name: Build & Test
+      - name: Build, Test & Coverage Check
         run: mvn -B verify
         working-directory: backend
-
-      - name: Upload Coverage
+      - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: backend/target/site/jacoco/
+      - name: Test Summary
+        run: |
+          echo "## Backend Test Results" >> $GITHUB_STEP_SUMMARY
+          grep -E "Tests run:|BUILD" <(mvn -B test -q 2>&1 || true) >> $GITHUB_STEP_SUMMARY
 
-  frontend:
+  frontend-lint:
+    name: Frontend Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
       - name: Install Dependencies
         run: npm install
         working-directory: frontend
-
       - name: Lint
         run: npm run lint
         working-directory: frontend
 
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install Dependencies
+        run: npm install
+        working-directory: frontend
+      - name: Run Tests
+        run: npm test
+        working-directory: frontend
+
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install Dependencies
+        run: npm install
+        working-directory: frontend
       - name: Build
         run: npm run build
         working-directory: frontend
+
+  codeql:
+    name: CodeQL Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java, javascript
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4

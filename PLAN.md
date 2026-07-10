@@ -13,7 +13,7 @@ Build a full-stack Car Dealership Inventory System for the **Incubyte TDD kata**
 ## GitHub Repository Setup
 
 - **Owner:** `veddarji`
-- **Repo name:** `INqubits`
+- **Repo name:** `autovault`
 - **Visibility:** Public
 - **Issues:** Enabled — create issues for each feature area
 - **Projects:** Enabled — simple kanban board (To Do → In Progress → Done)
