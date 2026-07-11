@@ -142,9 +142,53 @@ npm run test:coverage           # Run with coverage
 └── README.md
 ```
 
+## Test Report
+
+All **103 backend tests** pass (JUnit 5 + Mockito + H2):
+
+| Test Class | Tests | Status |
+|-----------|-------|--------|
+| `AuthServiceTest` | 7 | ✅ |
+| `VehicleServiceTest` | 13 | ✅ |
+| `InventoryServiceTest` | 7 | ✅ |
+| `AuthControllerTest` | 6 | ✅ |
+| `VehicleControllerTest` | 17 | ✅ |
+| `UserRepositoryTest` | 7 | ✅ |
+| `VehicleRepositoryTest` | 7 | ✅ |
+| `JwtServiceTest` | 7 | ✅ |
+| `CustomUserDetailsServiceTest` | 2 | ✅ |
+| `SecurityConfigTest` | 4 | ✅ |
+| `SwaggerDocTest` | 10 | ✅ |
+| `DevProfileTest` | 1 | ✅ |
+| `DockerConfigTest` | 1 | ✅ |
+| `AuthFlowIT` | 4 | ✅ |
+| `VehicleFlowIT` | 6 | ✅ |
+| `InventoryFlowIT` | 4 | ✅ |
+| **Total** | **103** | **✅ All Passing** |
+
+Quick API smoke-test script:
+```powershell
+cd backend
+.\test-all.ps1
+```
+
+This tests all 14 endpoints end-to-end: register, login, CRUD, purchase, restock, auth errors.
+
+## Database
+
+Connect with psql:
+```powershell
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -d cardealership
+```
+
+Two tables:
+- `users` — id, username, email, role (USER / ADMIN)
+- `vehicles` — id, make, model, category, price, quantity
+
 ## My AI Usage
 
 ### Tools Used
+- **OpenCode**: AI coding assistant used for implementing backend features, debugging JWT/security issues, writing test scripts, and refactoring the controller layer.
 - **Google Gemini (Antigravity)**: Primary AI assistant for the entire development lifecycle
 
 ### How I Used AI
@@ -165,7 +209,7 @@ AI significantly accelerated development by handling repetitive boilerplate and 
 
 ## Screenshots
 
-_Screenshots will be added after the application is running._
+_Screenshots will be added after the frontend is built._
 
 ## License
 
