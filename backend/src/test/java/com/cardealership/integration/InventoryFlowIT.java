@@ -54,10 +54,11 @@ class InventoryFlowIT {
     void purchaseVehicle_WithSufficientStock_Success() {
         HttpHeaders userHeaders = new HttpHeaders();
         userHeaders.setBearerAuth(userToken);
+        userHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         ResponseEntity<VehicleResponse> response = restTemplate.exchange(
                 "/api/vehicles/" + vehicleId + "/purchase", HttpMethod.POST,
-                new HttpEntity<>(userHeaders), VehicleResponse.class);
+                new HttpEntity<>(Map.of("quantity", 1), userHeaders), VehicleResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().quantity()).isEqualTo(2);
@@ -67,15 +68,16 @@ class InventoryFlowIT {
     void purchaseVehicle_WithInsufficientStock_Returns400() {
         HttpHeaders userHeaders = new HttpHeaders();
         userHeaders.setBearerAuth(userToken);
+        userHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         for (int i = 0; i < 3; i++) {
             restTemplate.exchange("/api/vehicles/" + vehicleId + "/purchase",
-                    HttpMethod.POST, new HttpEntity<>(userHeaders), VehicleResponse.class);
+                    HttpMethod.POST, new HttpEntity<>(Map.of("quantity", 1), userHeaders), VehicleResponse.class);
         }
 
         ResponseEntity<ErrorResponse> response = restTemplate.exchange(
                 "/api/vehicles/" + vehicleId + "/purchase", HttpMethod.POST,
-                new HttpEntity<>(userHeaders), ErrorResponse.class);
+                new HttpEntity<>(Map.of("quantity", 999), userHeaders), ErrorResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }

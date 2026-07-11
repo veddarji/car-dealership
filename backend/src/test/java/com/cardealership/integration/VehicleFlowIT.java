@@ -103,10 +103,11 @@ class VehicleFlowIT {
 
         HttpHeaders userHeaders = new HttpHeaders();
         userHeaders.setBearerAuth(userToken);
+        userHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         ResponseEntity<VehicleResponse> purchaseResponse = restTemplate.exchange(
                 "/api/vehicles/" + vehicleId + "/purchase", HttpMethod.POST,
-                new HttpEntity<>(userHeaders), VehicleResponse.class);
+                new HttpEntity<>(Map.of("quantity", 1), userHeaders), VehicleResponse.class);
 
         assertThat(purchaseResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(purchaseResponse.getBody().quantity()).isEqualTo(4);
