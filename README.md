@@ -527,28 +527,28 @@ npm run test:watch
 
 | Page | Screenshot |
 |------|-----------|
-| **Login** | ![Login Page](screenshots/login.png) |
-| **Register** | ![Register Page](screenshots/register.png) |
-| **Dashboard** | ![Dashboard](screenshots/dashboard.png) |
-| **Vehicle Detail** | ![Vehicle Detail](screenshots/vehicle-detail.png) |
-| **Admin Panel** | ![Admin Panel](screenshots/admin.png) |
-| **Mobile Dashboard** | ![Mobile Dashboard](screenshots/dashboard-mobile.png) |
+| **Login** | ![Login Page](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/login.png) |
+| **Register** | ![Register Page](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/register.png) |
+| **Dashboard** | ![Dashboard](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/dashboard.png) |
+| **Vehicle Detail** | ![Vehicle Detail](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/vehicle-detail.png) |
+| **Admin Panel** | ![Admin Panel](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/admin.png) |
+| **Mobile Dashboard** | ![Mobile Dashboard](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/dashboard-mobile.png) |
 
 ### Backend JaCoCo Coverage Report
 
-![JaCoCo Coverage](screenshots/coverage-backend.png)
+![JaCoCo Coverage](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/coverage-backend.png)
 
 The full JaCoCo HTML report is available at `backend/target/site/jacoco/index.html` after running `mvn jacoco:report`. Current coverage: **92% instruction, 85% branch** across 17 classes.
 
 ### Frontend Vitest Coverage Report
 
-![Vitest Coverage](screenshots/coverage-frontend.png)
+![Vitest Coverage](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/coverage-frontend.png)
 
 The full Vitest HTML coverage report is available at `frontend/coverage/lcov-report/index.html` after running `npm run test:coverage`. Current results: **99 tests in 13 files, all passing**.
 
 ### Swagger UI
 
-![Swagger UI](screenshots/swagger.png)
+![Swagger UI](https://raw.githubusercontent.com/veddarji/car-dealership/fix/auth-logging-500/screenshots/swagger.png)
 
 Open `http://localhost:8080/swagger-ui.html` in a browser while the backend is running to see the interactive API documentation with all endpoints and the Authorize button for JWT.
 
