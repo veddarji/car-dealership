@@ -32,7 +32,6 @@ export default function AdminPage() {
   useEffect(() => { fetchVehicles(); }, [fetchVehicles]);
 
   const openCreate = () => setFormModal({ open: true, vehicle: null });
-  const openEdit = (v) => setFormModal({ open: true, vehicle: v });
 
   const handleFormSubmit = async (data) => {
     if (formModal.vehicle) {

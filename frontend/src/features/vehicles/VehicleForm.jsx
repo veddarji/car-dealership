@@ -48,7 +48,7 @@ export default function VehicleForm({ isOpen, onClose, onSubmit, initialData, ti
         quantity: parseInt(form.quantity),
       });
       onClose();
-    } catch (err) {
+    } catch {
       // error handled by parent
     } finally {
       setLoading(false);
