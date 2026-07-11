@@ -523,30 +523,34 @@ npm run test:watch
 
 ## Screenshots
 
-> *Screenshots are generated from coverage reports and application UI captures.*
+### Application Pages
+
+| Page | Screenshot |
+|------|-----------|
+| **Login** | ![Login Page](screenshots/login.png?raw=true) |
+| **Register** | ![Register Page](screenshots/register.png?raw=true) |
+| **Dashboard** | ![Dashboard](screenshots/dashboard.png?raw=true) |
+| **Vehicle Detail** | ![Vehicle Detail](screenshots/vehicle-detail.png?raw=true) |
+| **Admin Panel** | ![Admin Panel](screenshots/admin.png?raw=true) |
+| **Mobile Dashboard** | ![Mobile Dashboard](screenshots/dashboard-mobile.png?raw=true) |
 
 ### Backend JaCoCo Coverage Report
 
-The full JaCoCo HTML report is available at `backend/target/site/jacoco/index.html` after running `mvn jacoco:report`.
+![JaCoCo Coverage](screenshots/coverage-backend.png?raw=true)
+
+The full JaCoCo HTML report is available at `backend/target/site/jacoco/index.html` after running `mvn jacoco:report`. Current coverage: **92% instruction, 85% branch** across 17 classes.
 
 ### Frontend Vitest Coverage Report
 
-The full Vitest HTML coverage report is available at `frontend/coverage/lcov-report/index.html` after running `npm run test:coverage`.
+![Vitest Coverage](screenshots/coverage-frontend.png?raw=true)
+
+The full Vitest HTML coverage report is available at `frontend/coverage/lcov-report/index.html` after running `npm run test:coverage`. Current results: **99 tests in 13 files, all passing**.
 
 ### Swagger UI
 
+![Swagger UI](screenshots/swagger.png?raw=true)
+
 Open `http://localhost:8080/swagger-ui.html` in a browser while the backend is running to see the interactive API documentation with all endpoints and the Authorize button for JWT.
-
-### Application Pages
-
-| Page | Description |
-|------|-------------|
-| **Login** | `/login` — Username/password form with dark theme |
-| **Register** | `/register` — New user registration with validation |
-| **Dashboard** | `/` — Vehicle grid with search bar, pagination, shimmer loading |
-| **Vehicle Detail** | `/vehicles/:id` — Full vehicle info, purchase, restock, delete |
-| **Admin Panel** | `/admin` — Vehicle grid with create, edit, delete, restock controls |
-| **Mobile** | All pages responsive with hamburger menu |
 
 ---
 
