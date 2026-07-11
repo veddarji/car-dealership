@@ -1,23 +1,17 @@
 import { Link } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Badge from '../../shared/components/Badge';
-
-const categoryGradients = {
-  Sedan: 'linear-gradient(135deg, #667eea, #764ba2)',
-  SUV: 'linear-gradient(135deg, #f093fb, #f5576c)',
-  Coupe: 'linear-gradient(135deg, #4facfe, #00f2fe)',
-  Truck: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-  Hatchback: 'linear-gradient(135deg, #fa709a, #fee140)',
-  Van: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
-};
+import { getVehicleImage, getVehicleGradient } from '../../utils/vehicleImages';
 
 export default function VehicleCard({ vehicle, onPurchase, onDelete, admin = false }) {
-  const gradient = categoryGradients[vehicle.category] || categoryGradients.Sedan;
   const inStock = vehicle.quantity > 0;
+  const imgUrl = getVehicleImage(vehicle.category);
+  const gradient = getVehicleGradient(vehicle.category);
 
   return (
     <div className="vehicle-card glass">
       <div className="vehicle-card-img" style={{ background: gradient }}>
+        <img src={imgUrl} alt={vehicle.category} className="vehicle-card-img-el" loading="lazy" />
         <div className="vehicle-card-badge">
           <Badge variant={inStock ? 'success' : 'danger'}>
             {inStock ? `${vehicle.quantity} in stock` : 'Out of stock'}
