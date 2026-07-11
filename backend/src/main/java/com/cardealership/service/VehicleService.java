@@ -4,12 +4,15 @@ import com.cardealership.dto.VehicleRequest;
 import com.cardealership.dto.VehicleResponse;
 import com.cardealership.entity.Vehicle;
 import com.cardealership.exception.ResourceNotFoundException;
+import com.cardealership.repository.InventoryTransactionRepository;
+import com.cardealership.repository.PurchaseRepository;
 import com.cardealership.repository.VehicleRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -17,9 +20,15 @@ import java.math.BigDecimal;
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final InventoryTransactionRepository transactionRepository;
 
-    public VehicleService(VehicleRepository vehicleRepository) {
+    public VehicleService(VehicleRepository vehicleRepository,
+                          PurchaseRepository purchaseRepository,
+                          InventoryTransactionRepository transactionRepository) {
         this.vehicleRepository = vehicleRepository;
+        this.purchaseRepository = purchaseRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @CacheEvict(value = "vehicles", allEntries = true)
@@ -77,10 +86,16 @@ public class VehicleService {
     }
 
     @CacheEvict(value = "vehicles", allEntries = true)
+    @Transactional
     public void deleteVehicle(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
-        vehicleRepository.delete(vehicle);
+        if (!vehicleRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Vehicle not found with id: " + id);
+        }
+        transactionRepository.findByVehicleIdOrderByCreatedAtDesc(id)
+                .forEach(tx -> transactionRepository.delete(tx));
+        purchaseRepository.findByVehicleIdOrderByPurchasedAtDesc(id)
+                .forEach(p -> purchaseRepository.delete(p));
+        vehicleRepository.deleteById(id);
     }
 
     private VehicleResponse toResponse(Vehicle vehicle) {

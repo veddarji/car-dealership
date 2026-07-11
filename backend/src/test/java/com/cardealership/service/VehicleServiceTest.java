@@ -4,6 +4,8 @@ import com.cardealership.dto.VehicleRequest;
 import com.cardealership.dto.VehicleResponse;
 import com.cardealership.entity.Vehicle;
 import com.cardealership.exception.ResourceNotFoundException;
+import com.cardealership.repository.InventoryTransactionRepository;
+import com.cardealership.repository.PurchaseRepository;
 import com.cardealership.repository.VehicleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,11 +32,17 @@ class VehicleServiceTest {
     @Mock
     private VehicleRepository vehicleRepository;
 
+    @Mock
+    private PurchaseRepository purchaseRepository;
+
+    @Mock
+    private InventoryTransactionRepository transactionRepository;
+
     private VehicleService vehicleService;
 
     @BeforeEach
     void setUp() {
-        vehicleService = new VehicleService(vehicleRepository);
+        vehicleService = new VehicleService(vehicleRepository, purchaseRepository, transactionRepository);
     }
 
     @Test
@@ -194,21 +202,19 @@ class VehicleServiceTest {
 
     @Test
     void deleteVehicle_WithValidId_ShouldDelete() {
-        Vehicle vehicle = Vehicle.builder()
-                .id(1L).make("Toyota").model("Camry").category("Sedan")
-                .price(new BigDecimal("25000")).quantity(10).build();
-
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
-        doNothing().when(vehicleRepository).delete(vehicle);
+        when(vehicleRepository.existsById(1L)).thenReturn(true);
+        when(transactionRepository.findByVehicleIdOrderByCreatedAtDesc(1L)).thenReturn(List.of());
+        when(purchaseRepository.findByVehicleIdOrderByPurchasedAtDesc(1L)).thenReturn(List.of());
+        doNothing().when(vehicleRepository).deleteById(1L);
 
         vehicleService.deleteVehicle(1L);
 
-        verify(vehicleRepository).delete(vehicle);
+        verify(vehicleRepository).deleteById(1L);
     }
 
     @Test
     void deleteVehicle_WithInvalidId_ShouldThrowException() {
-        when(vehicleRepository.findById(99L)).thenReturn(Optional.empty());
+        when(vehicleRepository.existsById(99L)).thenReturn(false);
 
         assertThatThrownBy(() -> vehicleService.deleteVehicle(99L))
                 .isInstanceOf(ResourceNotFoundException.class);
