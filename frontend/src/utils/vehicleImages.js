@@ -4,10 +4,10 @@ export const categoryImages = {
   Sedan: `https://images.unsplash.com/photo-1503376780353-7e6692767b70?${w}`,
   SUV: `https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?${w}`,
   Coupe: `https://images.unsplash.com/photo-1583121274602-3e2820c69888?${w}`,
-  Truck: `https://images.unsplash.com/photo-1537146155080-2c2680f8be33?${w}`,
+  Truck: `https://images.unsplash.com/photo-1506891536236-3e07892564b7?${w}`,
   Convertible: `https://images.unsplash.com/photo-1553440569-bcc63803a83d?${w}`,
   Hatchback: `https://images.unsplash.com/photo-1568844293986-8d0400bd4745?${w}`,
-  Van: `https://images.unsplash.com/photo-1558618666-fcd25c85f82e?${w}`,
+  Van: `https://images.unsplash.com/photo-1570125909232-eb263c188f7e?${w}`,
 }
 
 export const categoryGradients = {
