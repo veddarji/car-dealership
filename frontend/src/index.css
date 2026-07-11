@@ -632,20 +632,47 @@ label {
 }
 
 .search-bar {
-  display: flex;
-  gap: 12px;
-  padding: 0 24px 32px;
   max-width: 1300px;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  margin: 0 auto 32px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: visible;
 }
-.search-bar .form-input,
-.search-bar .form-select {
-  min-width: 160px;
-  flex: 1;
+.search-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), var(--pink), var(--cyan), transparent);
 }
-.search-bar label { margin-bottom: 4px; }
+
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.search-grid .form-input,
+.search-grid select.form-input {
+  width: 100%;
+  min-width: 0;
+}
+
+.search-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.search-actions .btn {
+  padding: 10px 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
 
 .vehicle-detail {
   max-width: 800px;
@@ -917,9 +944,9 @@ label {
 .input-wrapper label { margin-bottom: 6px; }
 
 @media (max-width: 768px) {
-  .search-bar { flex-direction: column; }
-  .search-bar .form-input,
-  .search-bar .form-select { min-width: 100%; }
+  .search-bar { padding: 20px 16px; }
+  .search-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .search-actions { flex-direction: row; }
   .form-row { grid-template-columns: 1fr; }
   .navbar { padding: 0 16px; }
   .navbar-brand { font-size: 1rem; }
@@ -951,7 +978,6 @@ label {
   .stat { min-width: 100px; }
   .admin-header { padding: 20px 0; }
   .results-count { padding: 0 16px; }
-  .search-bar { padding: 0 16px 24px; }
 }
 
 @media (max-width: 480px) {
