@@ -7,6 +7,7 @@ import AdminRoute from './features/admin/AdminRoute';
 import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
 import DashboardPage from './features/vehicles/DashboardPage';
+import VehicleDetailPage from './features/vehicles/VehicleDetailPage';
 import AdminPage from './features/admin/AdminPage';
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/vehicles/:id" element={<VehicleDetailPage />} />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Route>
 

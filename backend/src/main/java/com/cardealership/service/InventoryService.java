@@ -2,7 +2,6 @@ package com.cardealership.service;
 
 import com.cardealership.dto.VehicleResponse;
 import com.cardealership.entity.InventoryTransaction;
-import com.cardealership.entity.Purchase;
 import com.cardealership.entity.User;
 import com.cardealership.entity.Vehicle;
 import com.cardealership.exception.OutOfStockException;

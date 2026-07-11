@@ -75,6 +75,20 @@ describe('LoginPage', () => {
     });
   });
 
+  it('displays fallback error message when no response', async () => {
+    const { toast } = await import('sonner');
+    mockLogin.mockRejectedValue(new Error('Network error'));
+    renderLogin();
+
+    await userEvent.type(screen.getByLabelText(/username/i), 'alice');
+    await userEvent.type(screen.getByLabelText(/password/i), 'pass');
+    await userEvent.click(screen.getByRole('button', { name: /sign in/i }));
+
+    await vi.waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Invalid credentials');
+    });
+  });
+
   it('navigates to register page on link click', async () => {
     renderLogin();
     const link = screen.getByText(/register/i);
