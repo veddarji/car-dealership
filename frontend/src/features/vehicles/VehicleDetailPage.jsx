@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getVehicleById, deleteVehicle, purchaseVehicle, restockVehicle } from '../../api/vehicleApi';
 import { useAuth } from '../../hooks/useAuth';
+import { getVehicleImage, getVehicleGradient } from '../../utils/vehicleImages';
 import Button from '../../shared/components/Button';
 import Badge from '../../shared/components/Badge';
 import Loader from '../../shared/components/Loader';
@@ -74,6 +75,9 @@ export default function VehicleDetailPage() {
       </Button>
 
       <div className="detail-card glass">
+        <div className="detail-hero" style={{ background: getVehicleGradient(vehicle.category) }}>
+          <img src={getVehicleImage(vehicle.category)} alt={vehicle.category} className="detail-hero-img" />
+        </div>
         <div className="detail-header">
           <div>
             <h1>{vehicle.make} {vehicle.model}</h1>
