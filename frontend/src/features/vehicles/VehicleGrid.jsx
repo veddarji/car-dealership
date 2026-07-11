@@ -1,5 +1,6 @@
 import VehicleCard from './VehicleCard';
 import { SkeletonCard } from '../../shared/components/Loader';
+import Button from '../../shared/components/Button';
 
 export default function VehicleGrid({ vehicles, loading, error, onRetry, admin = false, onPurchase, onDelete }) {
   if (error) {
@@ -7,9 +8,9 @@ export default function VehicleGrid({ vehicles, loading, error, onRetry, admin =
       <div className="empty-state">
         <h2>Something went wrong</h2>
         <p>{error}</p>
-        {onRetry && (
-          <button className="btn btn-primary" onClick={onRetry}>Retry</button>
-        )}
+          {onRetry && (
+            <Button onClick={onRetry}>Retry</Button>
+          )}
       </div>
     );
   }

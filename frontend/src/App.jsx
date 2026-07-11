@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './features/auth/AuthContext';
 import Navbar from './shared/components/Navbar';
@@ -9,6 +9,7 @@ import RegisterPage from './features/auth/RegisterPage';
 import DashboardPage from './features/vehicles/DashboardPage';
 import VehicleDetailPage from './features/vehicles/VehicleDetailPage';
 import AdminPage from './features/admin/AdminPage';
+import Button from './shared/components/Button';
 
 export default function App() {
   return (
@@ -31,11 +32,9 @@ export default function App() {
 
             <Route path="*" element={
               <div className="empty-state" style={{ marginTop: 80 }}>
-                <h1>404</h1>
+                <h1 style={{ fontSize: '4rem', fontWeight: 800, marginBottom: 8, background: 'linear-gradient(135deg, var(--amber), var(--red))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>404</h1>
                 <p>Page not found</p>
-                <a href="/dashboard" className="btn btn-primary" style={{ marginTop: 16, display: 'inline-block' }}>
-                  Go to Dashboard
-                </a>
+                <Link to="/dashboard"><Button style={{ marginTop: 20 }}>Go to Dashboard</Button></Link>
               </div>
             } />
           </Route>
