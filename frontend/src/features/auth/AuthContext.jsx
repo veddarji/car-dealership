@@ -1,15 +1,22 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { login as apiLogin, register as apiRegister } from '../api/authApi';
+import { createContext, useState, useCallback, useEffect } from 'react';
+import { login as apiLogin, register as apiRegister } from '../../api/authApi';
+import Loader from '../../shared/components/Loader';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
-    const token = localStorage.getItem('token');
-    return username && token ? { username, role, token } : null;
-  });
+    if (token && username) {
+      setUser({ username, role, token });
+    }
+    setLoading(false);
+  }, []);
 
   const login = useCallback(async (credentials) => {
     const { data } = await apiLogin(credentials);
@@ -36,15 +43,11 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  if (loading) return <Loader text="Checking authentication..." />;
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin: user?.role === 'ADMIN', login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
-  return ctx;
 }
