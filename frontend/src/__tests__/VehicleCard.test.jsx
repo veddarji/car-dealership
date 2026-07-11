@@ -70,4 +70,21 @@ describe('VehicleCard', () => {
     await userEvent.click(screen.getByRole('button', { name: /delete/i }));
     expect(onDelete).toHaveBeenCalledWith(baseVehicle);
   });
+
+  it('calls onPurchase when restock button clicked in admin mode', async () => {
+    const onPurchase = vi.fn();
+    renderCard({ admin: true, onPurchase });
+    await userEvent.click(screen.getByRole('button', { name: /restock/i }));
+    expect(onPurchase).toHaveBeenCalledWith(baseVehicle);
+  });
+
+  it('shows details link for non-admin users', () => {
+    renderCard();
+    expect(screen.getByText('Details').closest('a')).toHaveAttribute('href', '/vehicles/1');
+  });
+
+  it('falls back to Sedan gradient for unknown category', () => {
+    renderCard({ vehicle: { ...baseVehicle, category: 'Unknown' } });
+    expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
+  });
 });

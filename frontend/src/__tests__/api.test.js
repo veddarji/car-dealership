@@ -76,6 +76,21 @@ describe('vehicleApi', () => {
     expect(result.data.quantity).toBe(10);
   });
 
+  it('getVehicleById calls GET /api/vehicles/:id', async () => {
+    mockAxiosInstance.get.mockResolvedValue({ data: { id: 1, make: 'Toyota' } });
+    const { getVehicleById } = await import('../api/vehicleApi');
+    const result = await getVehicleById(7);
+    expect(mockAxiosInstance.get).toHaveBeenCalledWith('/api/vehicles/7');
+    expect(result.data.make).toBe('Toyota');
+  });
+
+  it('updateVehicle calls PUT /api/vehicles/:id', async () => {
+    mockAxiosInstance.put.mockResolvedValue({ data: { id: 3, make: 'Honda' } });
+    const { updateVehicle } = await import('../api/vehicleApi');
+    await updateVehicle(3, { make: 'Honda', price: 25000 });
+    expect(mockAxiosInstance.put).toHaveBeenCalledWith('/api/vehicles/3', { make: 'Honda', price: 25000 });
+  });
+
   it('searchVehicles calls GET /api/vehicles/search', async () => {
     mockAxiosInstance.get.mockResolvedValue({ data: { content: [] } });
     const { searchVehicles } = await import('../api/vehicleApi');

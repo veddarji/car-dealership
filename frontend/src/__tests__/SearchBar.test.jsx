@@ -45,4 +45,13 @@ describe('SearchBar', () => {
       expect(screen.getByRole('option', { name: cat })).toBeInTheDocument();
     });
   });
+
+  it('updates sort selection', async () => {
+    const onSearch = vi.fn();
+    render(<SearchBar onSearch={onSearch} />);
+    const sortSelect = screen.getAllByRole('combobox')[1];
+    await userEvent.selectOptions(sortSelect, 'price,desc');
+    await userEvent.click(screen.getByRole('button', { name: /search/i }));
+    expect(onSearch).toHaveBeenCalledWith(expect.objectContaining({ sort: 'price,desc' }));
+  });
 });
