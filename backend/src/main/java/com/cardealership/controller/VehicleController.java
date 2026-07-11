@@ -6,6 +6,7 @@ import com.cardealership.dto.VehicleRequest;
 import com.cardealership.dto.VehicleResponse;
 import com.cardealership.service.InventoryService;
 import com.cardealership.service.VehicleService;
+import com.cardealership.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -120,8 +122,10 @@ public class VehicleController {
     @ApiResponse(responseCode = "404", description = "Vehicle not found")
     @PostMapping("/{id}/purchase")
     public ResponseEntity<VehicleResponse> purchaseVehicle(
-            @PathVariable Long id, @RequestBody @Valid PurchaseRequest request) {
-        VehicleResponse response = inventoryService.purchaseVehicle(id, request.quantity());
+            @PathVariable Long id,
+            @RequestBody @Valid PurchaseRequest request,
+            @AuthenticationPrincipal User user) {
+        VehicleResponse response = inventoryService.purchaseVehicle(id, request.quantity(), user);
         return ResponseEntity.ok(response);
     }
 
@@ -134,8 +138,10 @@ public class VehicleController {
     @ApiResponse(responseCode = "404", description = "Vehicle not found")
     @PostMapping("/{id}/restock")
     public ResponseEntity<VehicleResponse> restockVehicle(
-            @PathVariable Long id, @RequestBody @Valid PurchaseRequest request) {
-        VehicleResponse response = inventoryService.restockVehicle(id, request.quantity());
+            @PathVariable Long id,
+            @RequestBody @Valid PurchaseRequest request,
+            @AuthenticationPrincipal User user) {
+        VehicleResponse response = inventoryService.restockVehicle(id, request.quantity(), user);
         return ResponseEntity.ok(response);
     }
 

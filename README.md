@@ -164,7 +164,12 @@ All **103 backend tests** pass (JUnit 5 + Mockito + H2):
 | `AuthFlowIT` | 4 | ✅ |
 | `VehicleFlowIT` | 6 | ✅ |
 | `InventoryFlowIT` | 4 | ✅ |
-| **Total** | **103** | **✅ All Passing** |
+| `CategoryRepositoryTest` | 4 | ✅ |
+| `CategoryServiceTest` | 5 | ✅ |
+| `PurchaseRepositoryTest` | 3 | ✅ |
+| `PurchaseServiceTest` | 1 | ✅ |
+| `InventoryTransactionRepositoryTest` | 2 | ✅ |
+| **Total** | **118** | **✅ All Passing** |
 
 Quick API smoke-test script:
 ```powershell
@@ -212,9 +217,12 @@ Connect with psql:
 & "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -d cardealership
 ```
 
-Two tables:
+Five tables:
 - `users` — id, username, email, role (USER / ADMIN)
 - `vehicles` — id, make, model, category, price, quantity
+- `categories` — id, name (unique), description
+- `purchases` — id, user_id (FK), vehicle_id (FK), quantity, unit_price, total_price, purchased_at
+- `inventory_transactions` — id, vehicle_id (FK), user_id (FK), type (PURCHASE/RESTOCK), quantity_change, previous/new quantity, created_at
 
 ## My AI Usage
 

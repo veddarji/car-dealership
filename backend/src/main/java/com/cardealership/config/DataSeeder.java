@@ -1,8 +1,10 @@
 package com.cardealership.config;
 
+import com.cardealership.entity.Category;
 import com.cardealership.entity.User;
 import com.cardealership.entity.Vehicle;
 import com.cardealership.enums.Role;
+import com.cardealership.repository.CategoryRepository;
 import com.cardealership.repository.UserRepository;
 import com.cardealership.repository.VehicleRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,12 +19,14 @@ public class DataSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+    private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataSeeder(UserRepository userRepository, VehicleRepository vehicleRepository,
-                      PasswordEncoder passwordEncoder) {
+                      CategoryRepository categoryRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
+        this.categoryRepository = categoryRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,6 +42,9 @@ public class DataSeeder implements CommandLineRunner {
                 .password(passwordEncoder.encode("admin123"))
                 .role(Role.ADMIN)
                 .build());
+
+        List.of("Sedan", "SUV", "Coupe", "Truck", "Convertible", "Hatchback", "Van")
+                .forEach(name -> categoryRepository.save(new Category(null, name, null)));
 
         List<Vehicle> vehicles = List.of(
                 Vehicle.builder().make("Toyota").model("Camry").category("Sedan").price(new BigDecimal("27400")).quantity(5).build(),

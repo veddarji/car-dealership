@@ -226,7 +226,7 @@ class VehicleControllerTest {
     void purchaseVehicle_WithSufficientStock_ShouldReturn200() throws Exception {
         VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan",
                 new BigDecimal("25000"), 7);
-        when(inventoryService.purchaseVehicle(1L, 1)).thenReturn(response);
+        when(inventoryService.purchaseVehicle(eq(1L), eq(1), any(User.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/vehicles/1/purchase")
                         .header("Authorization", "Bearer " + userToken)
@@ -238,7 +238,7 @@ class VehicleControllerTest {
 
     @Test
     void purchaseVehicle_WithInsufficientStock_ShouldReturn400() throws Exception {
-        when(inventoryService.purchaseVehicle(1L, 1))
+        when(inventoryService.purchaseVehicle(eq(1L), eq(1), any(User.class)))
                 .thenThrow(new OutOfStockException("Insufficient stock"));
 
         mockMvc.perform(post("/api/vehicles/1/purchase")
@@ -252,7 +252,7 @@ class VehicleControllerTest {
     void restockVehicle_AsAdmin_ShouldReturn200() throws Exception {
         VehicleResponse response = new VehicleResponse(1L, "Toyota", "Camry", "Sedan",
                 new BigDecimal("25000"), 15);
-        when(inventoryService.restockVehicle(1L, 5)).thenReturn(response);
+        when(inventoryService.restockVehicle(eq(1L), eq(5), any(User.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/vehicles/1/restock")
                         .header("Authorization", "Bearer " + adminToken)
