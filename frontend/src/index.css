@@ -793,6 +793,16 @@ label {
 }
 
 .form-group { margin-bottom: 16px; }
+.form-error {
+  font-size: 0.78rem;
+  color: var(--red);
+  margin-top: 4px;
+  display: block;
+}
+.has-error .form-input {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-glow);
+}
 
 .form-row {
   display: grid;
