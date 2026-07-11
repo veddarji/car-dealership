@@ -174,6 +174,37 @@ cd backend
 
 This tests all 14 endpoints end-to-end: register, login, CRUD, purchase, restock, auth errors.
 
+## Performance & Scalability (100K+ Users)
+
+### Database Indexes
+| Index | Type | Purpose |
+|-------|------|---------|
+| `idx_vehicles_make_trgm` | GIN (pg_trgm) | Fast `LIKE '%...%'` on make |
+| `idx_vehicles_model_trgm` | GIN (pg_trgm) | Fast `LIKE '%...%'` on model |
+| `idx_vehicles_category` | B-tree | Exact filter on category |
+| `idx_vehicles_price` | B-tree | Range queries on price |
+| `idx_vehicles_make_model` | Composite B-tree | Combined make+model sort |
+| `idx_vehicles_category_price` | Composite B-tree | Category + price filter |
+
+### Caching
+Spring Cache (`ConcurrentMapCacheManager`) with `@Cacheable`/`@CacheEvict`:
+- `getAllVehicles` — cached per pageable
+- `getVehicleById` — cached per ID
+- Write operations (`create`, `update`, `delete`) evict entire cache
+
+### Connection Pool (HikariCP)
+| Parameter | Value | Env Override |
+|-----------|-------|-------------|
+| min-idle | 10 | `HIKARI_MIN_IDLE` |
+| max-pool-size | 50 | `HIKARI_MAX_POOL` |
+| idle-timeout | 300s | `HIKARI_IDLE_TIMEOUT` |
+| max-lifetime | 600s | `HIKARI_MAX_LIFETIME` |
+| connection-timeout | 30s | `HIKARI_CONN_TIMEOUT` |
+
+### Batch Processing
+- Hibernate batch inserts/updates enabled (batch_size=25)
+- SQL logging disabled by default (`SHOW_SQL=false`)
+
 ## Database
 
 Connect with psql:
