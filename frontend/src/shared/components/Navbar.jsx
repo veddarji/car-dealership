@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import Button from './Button';
+import Badge from './Badge';
 
 export default function Navbar() {
   const { user, isAdmin, logout } = useAuth();
@@ -15,7 +17,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <Link to="/dashboard" className="navbar-brand">Car Dealership</Link>
+        <Link to="/dashboard" className="navbar-brand">AutoVault</Link>
 
         <button
           className={`hamburger ${menuOpen ? 'open' : ''}`}
@@ -35,16 +37,14 @@ export default function Navbar() {
             <>
               <span className="navbar-username">
                 {user.username}
-                <span className={`badge badge-${isAdmin ? 'danger' : 'info'}`}>
-                  {user.role}
-                </span>
+                <Badge variant={isAdmin ? 'danger' : 'info'}>{user.role}</Badge>
               </span>
-              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>Logout</Button>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-ghost btn-sm">Login</Link>
-              <Link to="/register" className="btn btn-primary btn-sm">Register</Link>
+              <Link to="/login"><Button variant="ghost" size="sm">Login</Button></Link>
+              <Link to="/register"><Button variant="primary" size="sm">Register</Button></Link>
             </>
           )}
         </div>

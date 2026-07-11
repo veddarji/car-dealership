@@ -55,8 +55,8 @@ export default function VehicleCard({ vehicle, onPurchase, onDelete, admin = fal
               >
                 {inStock ? 'Purchase' : 'Out of Stock'}
               </Button>
-              <Link to={`/vehicles/${vehicle.id}`} className="btn btn-outline btn-sm">
-                Details
+              <Link to={`/vehicles/${vehicle.id}`}>
+                <Button variant="outline" size="sm">Details</Button>
               </Link>
             </>
           )}
