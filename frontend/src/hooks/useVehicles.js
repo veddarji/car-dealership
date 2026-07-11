@@ -37,7 +37,7 @@ export function useVehicleDetail(id) {
     setLoading(true);
     getVehicleById(id)
       .then(({ data }) => setVehicle(data))
-      .catch((err) => {
+      .catch(() => {
         setError('Vehicle not found');
         toast.error('Vehicle not found');
       })

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Badge from '../../shared/components/Badge';
-import { useAuth } from '../../hooks/useAuth';
 
 const categoryGradients = {
   Sedan: 'linear-gradient(135deg, #667eea, #764ba2)',
@@ -13,7 +12,6 @@ const categoryGradients = {
 };
 
 export default function VehicleCard({ vehicle, onPurchase, onDelete, admin = false }) {
-  const { isAdmin } = useAuth();
   const gradient = categoryGradients[vehicle.category] || categoryGradients.Sedan;
   const inStock = vehicle.quantity > 0;
 
