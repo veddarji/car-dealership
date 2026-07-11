@@ -81,4 +81,20 @@ class JwtServiceTest {
 
         assertThat(valid).isFalse();
     }
+
+    @Test
+    void isTokenValid_WithExpiredToken_ShouldReturnFalse() {
+        jwtService.expirationMs = -86400000;
+        String token = jwtService.generateToken(userDetails);
+
+        boolean valid = jwtService.isTokenValid(token, userDetails);
+
+        assertThat(valid).isFalse();
+    }
+
+    @Test
+    void extractUsername_WithMalformedToken_ShouldThrowException() {
+        assertThatThrownBy(() -> jwtService.extractUsername("invalid.token.here"))
+                .isInstanceOf(Exception.class);
+    }
 }
