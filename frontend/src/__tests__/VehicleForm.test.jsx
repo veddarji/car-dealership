@@ -88,4 +88,65 @@ describe('VehicleForm', () => {
     await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('returns null when isOpen is false', () => {
+    const { container } = render(
+      <VehicleForm isOpen={false} onClose={vi.fn()} onSubmit={vi.fn()} />
+    );
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('shows default title when no title prop', () => {
+    render(<VehicleForm isOpen={true} onClose={vi.fn()} onSubmit={vi.fn()} />);
+    expect(screen.getByText('Add Vehicle')).toBeInTheDocument();
+  });
+
+  it('shows Edit Vehicle title with initialData and no title prop', () => {
+    render(
+      <VehicleForm
+        isOpen={true}
+        onClose={vi.fn()}
+        onSubmit={vi.fn()}
+        initialData={sampleVehicle}
+      />
+    );
+    expect(screen.getByText('Edit Vehicle')).toBeInTheDocument();
+  });
+
+  it('validates model is required', async () => {
+    renderForm({ initialData: { ...sampleVehicle, model: '' } });
+    await userEvent.click(screen.getByRole('button', { name: /update/i }));
+    expect(screen.getByText('Required')).toBeInTheDocument();
+  });
+
+  it('validates category is required', async () => {
+    renderForm({ initialData: { ...sampleVehicle, category: '' } });
+    await userEvent.click(screen.getByRole('button', { name: /update/i }));
+    expect(screen.getByText('Required')).toBeInTheDocument();
+  });
+
+  it('prevents submission when quantity is negative', async () => {
+    const onSubmit = vi.fn();
+    renderForm({
+      initialData: { ...sampleVehicle, quantity: -1 },
+      onSubmit,
+    });
+    await userEvent.click(screen.getByRole('button', { name: /update/i }));
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('prevents submission on empty form with quantity error', async () => {
+    const onSubmit = vi.fn();
+    renderForm({ onSubmit });
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('closes on overlay click', async () => {
+    const onClose = vi.fn();
+    renderForm({ onClose });
+    const overlay = document.querySelector('.modal-overlay');
+    await userEvent.click(overlay);
+    expect(onClose).toHaveBeenCalled();
+  });
 });

@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VehicleSpecifications {
+public final class VehicleSpecifications {
+
+    private VehicleSpecifications() { }
 
     public static Specification<Vehicle> searchByFilters(String make, String model, String category,
                                                           BigDecimal minPrice, BigDecimal maxPrice) {
