@@ -1,9 +1,12 @@
 package com.cardealership.service;
 
 import com.cardealership.dto.VehicleResponse;
+import com.cardealership.entity.User;
 import com.cardealership.entity.Vehicle;
+import com.cardealership.enums.Role;
 import com.cardealership.exception.OutOfStockException;
 import com.cardealership.exception.ResourceNotFoundException;
+import com.cardealership.repository.InventoryTransactionRepository;
 import com.cardealership.repository.VehicleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,11 +27,19 @@ class InventoryServiceTest {
     @Mock
     private VehicleRepository vehicleRepository;
 
+    @Mock
+    private PurchaseService purchaseService;
+
+    @Mock
+    private InventoryTransactionRepository transactionRepository;
+
     private InventoryService inventoryService;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        inventoryService = new InventoryService(vehicleRepository);
+        inventoryService = new InventoryService(vehicleRepository, purchaseService, transactionRepository);
+        user = User.builder().id(1L).username("alice").role(Role.USER).build();
     }
 
     @Test
@@ -40,7 +51,7 @@ class InventoryServiceTest {
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
         when(vehicleRepository.save(any(Vehicle.class))).thenAnswer(i -> i.getArgument(0));
 
-        VehicleResponse response = inventoryService.purchaseVehicle(1L, 3);
+        VehicleResponse response = inventoryService.purchaseVehicle(1L, 3, user);
 
         assertThat(response.quantity()).isEqualTo(7);
         verify(vehicleRepository).save(vehicle);
@@ -54,13 +65,13 @@ class InventoryServiceTest {
 
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
 
-        assertThatThrownBy(() -> inventoryService.purchaseVehicle(1L, 5))
+        assertThatThrownBy(() -> inventoryService.purchaseVehicle(1L, 5, user))
                 .isInstanceOf(OutOfStockException.class);
     }
 
     @Test
     void purchaseVehicle_WithZeroQuantity_ShouldThrowException() {
-        assertThatThrownBy(() -> inventoryService.purchaseVehicle(1L, 0))
+        assertThatThrownBy(() -> inventoryService.purchaseVehicle(1L, 0, user))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -68,7 +79,7 @@ class InventoryServiceTest {
     void purchaseVehicle_WithNonExistentId_ShouldThrowException() {
         when(vehicleRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> inventoryService.purchaseVehicle(99L, 1))
+        assertThatThrownBy(() -> inventoryService.purchaseVehicle(99L, 1, user))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -81,7 +92,7 @@ class InventoryServiceTest {
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
         when(vehicleRepository.save(any(Vehicle.class))).thenAnswer(i -> i.getArgument(0));
 
-        VehicleResponse response = inventoryService.restockVehicle(1L, 5);
+        VehicleResponse response = inventoryService.restockVehicle(1L, 5, user);
 
         assertThat(response.quantity()).isEqualTo(15);
         verify(vehicleRepository).save(vehicle);
@@ -91,13 +102,13 @@ class InventoryServiceTest {
     void restockVehicle_WithNonExistentId_ShouldThrowException() {
         when(vehicleRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> inventoryService.restockVehicle(99L, 5))
+        assertThatThrownBy(() -> inventoryService.restockVehicle(99L, 5, user))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
     void restockVehicle_WithZeroQuantity_ShouldThrowException() {
-        assertThatThrownBy(() -> inventoryService.restockVehicle(1L, 0))
+        assertThatThrownBy(() -> inventoryService.restockVehicle(1L, 0, user))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

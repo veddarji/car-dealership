@@ -164,7 +164,12 @@ All **103 backend tests** pass (JUnit 5 + Mockito + H2):
 | `AuthFlowIT` | 4 | ✅ |
 | `VehicleFlowIT` | 6 | ✅ |
 | `InventoryFlowIT` | 4 | ✅ |
-| **Total** | **103** | **✅ All Passing** |
+| `CategoryRepositoryTest` | 4 | ✅ |
+| `CategoryServiceTest` | 5 | ✅ |
+| `PurchaseRepositoryTest` | 3 | ✅ |
+| `PurchaseServiceTest` | 1 | ✅ |
+| `InventoryTransactionRepositoryTest` | 2 | ✅ |
+| **Total** | **118** | **✅ All Passing** |
 
 Quick API smoke-test script:
 ```powershell
@@ -174,6 +179,37 @@ cd backend
 
 This tests all 14 endpoints end-to-end: register, login, CRUD, purchase, restock, auth errors.
 
+## Performance & Scalability (100K+ Users)
+
+### Database Indexes
+| Index | Type | Purpose |
+|-------|------|---------|
+| `idx_vehicles_make_trgm` | GIN (pg_trgm) | Fast `LIKE '%...%'` on make |
+| `idx_vehicles_model_trgm` | GIN (pg_trgm) | Fast `LIKE '%...%'` on model |
+| `idx_vehicles_category` | B-tree | Exact filter on category |
+| `idx_vehicles_price` | B-tree | Range queries on price |
+| `idx_vehicles_make_model` | Composite B-tree | Combined make+model sort |
+| `idx_vehicles_category_price` | Composite B-tree | Category + price filter |
+
+### Caching
+Spring Cache (`ConcurrentMapCacheManager`) with `@Cacheable`/`@CacheEvict`:
+- `getAllVehicles` — cached per pageable
+- `getVehicleById` — cached per ID
+- Write operations (`create`, `update`, `delete`) evict entire cache
+
+### Connection Pool (HikariCP)
+| Parameter | Value | Env Override |
+|-----------|-------|-------------|
+| min-idle | 10 | `HIKARI_MIN_IDLE` |
+| max-pool-size | 50 | `HIKARI_MAX_POOL` |
+| idle-timeout | 300s | `HIKARI_IDLE_TIMEOUT` |
+| max-lifetime | 600s | `HIKARI_MAX_LIFETIME` |
+| connection-timeout | 30s | `HIKARI_CONN_TIMEOUT` |
+
+### Batch Processing
+- Hibernate batch inserts/updates enabled (batch_size=25)
+- SQL logging disabled by default (`SHOW_SQL=false`)
+
 ## Database
 
 Connect with psql:
@@ -181,9 +217,12 @@ Connect with psql:
 & "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -d cardealership
 ```
 
-Two tables:
+Five tables:
 - `users` — id, username, email, role (USER / ADMIN)
 - `vehicles` — id, make, model, category, price, quantity
+- `categories` — id, name (unique), description
+- `purchases` — id, user_id (FK), vehicle_id (FK), quantity, unit_price, total_price, purchased_at
+- `inventory_transactions` — id, vehicle_id (FK), user_id (FK), type (PURCHASE/RESTOCK), quantity_change, previous/new quantity, created_at
 
 ## My AI Usage
 
