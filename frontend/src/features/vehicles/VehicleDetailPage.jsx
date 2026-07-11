@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getVehicleById, deleteVehicle, purchaseVehicle, restockVehicle } from '../../api/vehicleApi';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../shared/components/Button';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 export default function VehicleDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAdmin } = useAuth();
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function VehicleDetailPage() {
         navigate('/dashboard');
       })
       .finally(() => setLoading(false));
-  }, [id, navigate]);
+  }, [id, navigate, location.key]);
 
   const handlePurchase = async () => {
     setAction('purchase');
