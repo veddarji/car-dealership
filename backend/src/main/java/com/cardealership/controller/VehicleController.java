@@ -1,6 +1,7 @@
 package com.cardealership.controller;
 
 import com.cardealership.dto.PagedResponse;
+import com.cardealership.dto.PurchaseRequest;
 import com.cardealership.dto.VehicleRequest;
 import com.cardealership.dto.VehicleResponse;
 import com.cardealership.service.InventoryService;
@@ -118,8 +119,9 @@ public class VehicleController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "404", description = "Vehicle not found")
     @PostMapping("/{id}/purchase")
-    public ResponseEntity<VehicleResponse> purchaseVehicle(@PathVariable Long id) {
-        VehicleResponse response = inventoryService.purchaseVehicle(id, 1);
+    public ResponseEntity<VehicleResponse> purchaseVehicle(
+            @PathVariable Long id, @RequestBody @Valid PurchaseRequest request) {
+        VehicleResponse response = inventoryService.purchaseVehicle(id, request.quantity());
         return ResponseEntity.ok(response);
     }
 
@@ -132,7 +134,7 @@ public class VehicleController {
     @ApiResponse(responseCode = "404", description = "Vehicle not found")
     @PostMapping("/{id}/restock")
     public ResponseEntity<VehicleResponse> restockVehicle(
-            @PathVariable Long id, @RequestBody @Valid com.cardealership.dto.PurchaseRequest request) {
+            @PathVariable Long id, @RequestBody @Valid PurchaseRequest request) {
         VehicleResponse response = inventoryService.restockVehicle(id, request.quantity());
         return ResponseEntity.ok(response);
     }

@@ -229,7 +229,9 @@ class VehicleControllerTest {
         when(inventoryService.purchaseVehicle(1L, 1)).thenReturn(response);
 
         mockMvc.perform(post("/api/vehicles/1/purchase")
-                        .header("Authorization", "Bearer " + userToken))
+                        .header("Authorization", "Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("quantity", 1))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.quantity").value(7));
     }
@@ -240,7 +242,9 @@ class VehicleControllerTest {
                 .thenThrow(new OutOfStockException("Insufficient stock"));
 
         mockMvc.perform(post("/api/vehicles/1/purchase")
-                        .header("Authorization", "Bearer " + userToken))
+                        .header("Authorization", "Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("quantity", 1))))
                 .andExpect(status().isBadRequest());
     }
 
