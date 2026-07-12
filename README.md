@@ -9,6 +9,12 @@
 
 A full-stack Car Dealership Inventory System with JWT-authenticated role-based access, complete vehicle CRUD, smart search with pagination, purchase/restock inventory management, and a premium dark-themed responsive UI.
 
+## Production Deployment
+
+- **Frontend**: [https://car-dealership-3fqi.vercel.app/](https://car-dealership-3fqi.vercel.app/)
+- **Backend API**: [http://carlelo-env.eba-xb8gjg6d.eu-north-1.elasticbeanstalk.com](http://carlelo-env.eba-xb8gjg6d.eu-north-1.elasticbeanstalk.com)
+- **Database**: AWS RDS PostgreSQL 16
+
 ---
 
 ## Project Description
@@ -23,14 +29,14 @@ This application enables car dealership staff to manage their vehicle inventory 
 ┌───────────────────────────────────────────────────────────┐
 │                    Browser (React SPA)                     │
 │  ┌─────────────────────────────────────────────────────┐  │
-│  │  Vite Dev Server (port 5173) /api → localhost:8080  │  │
+│  │  Vite Dev Server (port 5173) /api → backend:5000     │  │
 │  │  React Router 7 │ Axios │ AuthContext │ sonner      │  │
 │  └──────┬──────────────────────────────────────────────┘  │
 └─────────┼─────────────────────────────────────────────────┘
           │ HTTP (JWT Bearer Token)
           ▼
 ┌───────────────────────────────────────────────────────────┐
-│                 Spring Boot API (port 8080)                │
+│                 Spring Boot API (port 5000)                │
 │  ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
 │  │ Security │  │Controller│  │ Service  │  │   JPA     │  │
 │  │  Filter  │──▶  层    │──▶ 层     │──▶Repository│  │
@@ -254,7 +260,7 @@ npm install
 npm run dev
 ```
 
-The API will be at `http://localhost:8080`, the frontend at `http://localhost:5173`, and Swagger UI at `http://localhost:8080/swagger-ui.html`.
+The API will be at `http://localhost:5000`, the frontend at `http://localhost:5173`, and Swagger UI at `http://localhost:5000/swagger-ui.html`.
 
 ### Option 2: Local PostgreSQL
 
@@ -288,7 +294,7 @@ All configuration is externalized in `backend/src/main/resources/application.pro
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SERVER_PORT` | `8080` | API server port |
+| `SERVER_PORT` | `5000` | API server port |
 | `DB_HOST` | `localhost` | PostgreSQL host |
 | `DB_PORT` | `5432` | PostgreSQL port |
 | `DB_NAME` | `cardealership` | Database name |
@@ -315,7 +321,8 @@ For Docker Compose, copy `backend/.env.example` to `backend/.env` and customize.
 
 Interactive Swagger UI is available when the backend is running:
 
-> **http://localhost:8080/swagger-ui.html**
+> **Production**: [http://carlelo-env.eba-xb8gjg6d.eu-north-1.elasticbeanstalk.com/swagger-ui.html](http://carlelo-env.eba-xb8gjg6d.eu-north-1.elasticbeanstalk.com/swagger-ui.html)
+> **Local**: `http://localhost:5000/swagger-ui.html`
 
 The OpenAPI spec is generated at `/v3/api-docs` and includes JWT Bearer authentication — click the **Authorize** button in Swagger UI to paste your token.
 
@@ -371,38 +378,38 @@ The OpenAPI spec is generated at `/v3/api-docs` and includes JWT Bearer authenti
 
 ```bash
 # Register
-curl -X POST http://localhost:8080/api/auth/register \
+curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"jdoe","email":"j@doe.com","password":"secret123"}'
 
 # Login
-curl -X POST http://localhost:8080/api/auth/login \
+curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 
 # Get vehicles (with token)
 TOKEN="<your-jwt-token>"
-curl http://localhost:8080/api/vehicles?page=0&size=5 \
+curl http://localhost:5000/api/vehicles?page=0&size=5 \
   -H "Authorization: Bearer $TOKEN"
 
 # Search
-curl "http://localhost:8080/api/vehicles/search?make=Toyota&minPrice=10000&maxPrice=50000" \
+curl "http://localhost:5000/api/vehicles/search?make=Toyota&minPrice=10000&maxPrice=50000" \
   -H "Authorization: Bearer $TOKEN"
 
 # Create vehicle (ADMIN only)
-curl -X POST http://localhost:8080/api/vehicles \
+curl -X POST http://localhost:5000/api/vehicles \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"make":"Honda","model":"Civic","year":2024,"price":28000,"quantity":5,"category":"Sedan"}'
 
 # Purchase (USER)
-curl -X POST http://localhost:8080/api/vehicles/1/purchase \
+curl -X POST http://localhost:5000/api/vehicles/1/purchase \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"quantity":1}'
 
 # Restock (ADMIN only)
-curl -X POST http://localhost:8080/api/vehicles/1/restock \
+curl -X POST http://localhost:5000/api/vehicles/1/restock \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"quantity":10}'
@@ -564,7 +571,7 @@ INqubits/
 │   │   │   ├── CarDealershipApplication.java    # Entry point
 │   │   │   ├── config/
 │   │   │   │   ├── CacheConfig.java             # ConcurrentMapCacheManager
-│   │   │   │   ├── CorsConfig.java              # CORS for dev
+│   │   │   │   ├── CorsConfig.java              # CORS (dev + Vercel production)
 │   │   │   │   ├── DatabaseIndexInitializer.java # pg_trgm + B-tree idx
 │   │   │   │   ├── DataSeeder.java              # Admin user + 10 sample vehicles
 │   │   │   │   ├── OpenApiConfig.java           # Swagger with JWT bearer
@@ -698,7 +705,7 @@ Every commit includes a `Co-authored-by: OpenCode <ai@opencode.ai>` trailer to c
 
 ## Future Improvements
 
-- **Deployment**: Deploy to a cloud platform (Render, Railway, or AWS Elastic Beanstalk)
+- **Production URL**: Configure Vercel custom domain (e.g., `cardealer.example.com`)
 - **CI/CD Pipelines**: Add automated deployment workflow with Docker image build and push to Docker Hub / ECR
 - **Rate Limiting**: Implement rate limiting on public endpoints (`/api/auth/*`) to prevent brute force attacks
 - **Email Verification**: Add email verification flow during registration
